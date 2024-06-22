@@ -63,3 +63,10 @@ hdfs dfs -put earthquake.csv /
 ```
 
 ### Run
+To run application:
+```bash
+bash ./run.sh <type>
+```
+
+Argument:
+- `type`: possible values *simple* (without optimization) and *optimal* (with optimization).
