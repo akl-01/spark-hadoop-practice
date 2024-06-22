@@ -1,6 +1,9 @@
 import pandas as pd
 import psutil
 import os
+import numpy as np
+import warnings
+warnings.filterwarnings("ignore")
 
 IMPORTANT_FEATURES = [
     'sig', 'cdi', 'longitude', 'latitude', 
@@ -57,15 +60,13 @@ def fill_none(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def preprocess(df: pd.DataFrame) -> pd.DataFrame:
-    if df["real_time"].values == 1:
-        df = rename_columns(df)
-        df = complete(df)
+    df.index = np.array([0])
     df = df[IMPORTANT_FEATURES + TARGET]
     df = fill_none(df)
     df = net2office(df)
     df[INT_FEATURES] = df[INT_FEATURES].astype(int)
     df[FLOAT_FEATURES] = df[FLOAT_FEATURES].astype(float)
-
+    df.dropna(inplace=True)
     return df
 
 def get_memory_usage():

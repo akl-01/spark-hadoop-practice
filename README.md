@@ -9,7 +9,9 @@
 > Python3.10.12 is used
 
 ### Install requirements
-
+```bash
+pip install -r requirements.txt
+```
 ### Up docker-compose
 1. Go to `configuration` directory:
 ```bash
@@ -18,7 +20,7 @@ cd config
 
 2. Run docker-compose as demon:
 ```bash
-docker-compose up -d 
+docker-compose up --build -d
 ```
 
 Useful commands for docker containers manipulation:
@@ -37,12 +39,17 @@ docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 ```
 
+- To down docker containers via docker-compose:
+```bash
+docker-compose down
+``` 
+
 ### Put the dataset into HDFS
 1. Go to `spark-hadoop-lab` directory:
 
 2. Put the dataset into namenode:
 ```bash
-docker cp data/earthquake_2023-2024.csv namenode:/
+docker cp data/earthquake.csv namenode:/
 ```
 
 3. Go to namenode command line:
@@ -52,7 +59,7 @@ docker exec -it namenode /bin/bash
 
 4. Put the dataset to root of HDFS
 ```bash
-hdfs dfs -put earthquake_2023-2024.csv /
+hdfs dfs -put earthquake.csv /
 ```
 
 ### Run
