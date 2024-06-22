@@ -1,5 +1,6 @@
 import pandas as pd
 from pyspark.sql import SparkSession
+import pyspark
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_absolute_error
 import gc
@@ -30,9 +31,7 @@ class SimpleSparkSession:
             depth=3,
             loss_function="RMSE"
         ).load_model("/output/model.pkl")
-        self.spark.sparkContext.setLogLevel("OFF")
-        log4j = self.spark._jvm.org.apache.log4j
-        spark_logger = log4j.LogManager.getLogger("my custom Log Level")
+       
         self.times = []
         self.rams = []
 
@@ -47,7 +46,7 @@ class SimpleSparkSession:
         gc.collect()
     
     def dump(self):
-        with open('/output/ram_from_time.csv', 'w') as file:
+        with open('/output/ram_time_values.csv', 'w') as file:
             file.write("Index,Execution Time (seconds),RAM Usage (B)\n")
             for i in range(100):
                 file.write(f"{i+1},{self.times[i]},{self.rams[i]}\n")
@@ -83,3 +82,4 @@ logger.info("Startng read and process data")
 simple_spark_session.start()
 logger.info("Dump data to csv")
 simple_spark_session.dump()
+logger.info("End")
