@@ -16,34 +16,26 @@ console_formater = log.Formatter("[ %(levelname)s ] %(message)s")
 console.setFormatter(console_formater)
 logger.addHandler(console)
 
-def get_data() -> Any:
-    logger.info(f"Getting real time data")
-    start_time = datetime.datetime.fromisoformat('2023-01-01T00:00:01')
-    end_time = datetime.datetime.fromisoformat('2023-01-01T01:00:01')
-    events = search(starttime=start_time, endtime=end_time)
-    logger.info(f"Returned {len(events)} events")
+def get_data() -> pd.DataFrame:
+    dataset = pd.read_csv("data/earthquake_small.csv", index_col=0)
+    return dataset
 
-    return events
 
 def create_dataset() -> None:
-    events = get_data()
-
+    start = get_data()
+    dataset = pd.DataFrame(columns=['sig', 'cdi', 'longitude', 
+                                    'latitude', 'depth', 'gap', 
+                                    'dmin', 'nst', 'mmi',
+                                    'official', 'magnitude'])
     logger.info("Start dataset creating")
-    dataset = pd.DataFrame(columns=['sig', 'cdi', 'longitude', 'latitude', 'depth', 'gap', 'dmin', 'nst',
-                                     'mmi', 'official', 'magnitude'])
 
-    for event in tqdm(events):
-        with urllib.request.urlopen(event["detail"]) as url:
-            data = json.load(url)["properties"]
-        data["real_time"] = 1
-        data = pd.DataFrame(data)
-        data = data.loc["origin"].to_frame().transpose().reset_index()
-        data = data.drop(["index"], axis=1)
-        dataset = pd.concat((dataset, data))
+    for _ in tqdm(range(110)):
+        start = start.sample(frac=1)
+        dataset = pd.concat((start, dataset))
     
     logger.info(f"Create dataset with len = {len(dataset)}")
-    
-    dataset.to_csv("data/earthquake_2023-2024.csv")
+    dataset = dataset.reset_index(drop=True)
+    dataset.to_csv("data/earthquake.csv")
 
 def main():
     create_dataset()
