@@ -33,6 +33,32 @@ bash src/mertic.sh
 docker-compose up --build -d
 ```
 
+### Put the dataset into HDFS
+1. Put the dataset into namenode:
+```bash
+docker cp data/earthquake.csv namenode:/
+```
+
+3. Go to namenode command line:
+```bash
+docker exec -it namenode /bin/bash
+```
+
+4. Put the dataset to root of HDFS
+```bash
+hdfs dfs -put earthquake.csv /
+```
+
+### Start spark application
+1. Run the application:
+```bash
+bash ./run.sh <type>
+```
+
+Argument:
+- `type`: possible values *simple* (without optimization) and *optimal* (with optimization).
+
+## Useful command
 Useful commands for docker containers manipulation:
 - To see all docker containers:
 ```bash
@@ -53,28 +79,3 @@ docker rm $(docker ps -a -q)
 ```bash
 docker-compose down
 ``` 
-
-### Put the dataset into HDFS
-1. Put the dataset into namenode:
-```bash
-docker cp data/earthquake.csv namenode:/
-```
-
-3. Go to namenode command line:
-```bash
-docker exec -it namenode /bin/bash
-```
-
-4. Put the dataset to root of HDFS
-```bash
-hdfs dfs -put earthquake.csv /
-```
-
-### Run
-1. Run the application:
-```bash
-bash ./run.sh <type>
-```
-
-Argument:
-- `type`: possible values *simple* (without optimization) and *optimal* (with optimization).
