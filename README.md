@@ -4,6 +4,7 @@ The repository devote to work with `hadoop` store system and `spark` application
 ## Results
 ![alt text](./result/result.png)
 
+The results are obtained on subset of a dataset in order to time economy, because one experiment take around 20 hours.
 ## Clonning
 Clone the repository:
 ```bash
