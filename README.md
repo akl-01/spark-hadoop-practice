@@ -22,11 +22,6 @@ python3 src/dataset_creation.py
 ## Run
 > Python3.10.12 is used
 
-### Install requirements
-```bash
-pip install -r requirements.txt
-```
-
 ### Up docker-compose
 1. Create file for metric output
 ```bash
