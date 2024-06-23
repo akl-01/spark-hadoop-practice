@@ -35,7 +35,7 @@ def create_dataset() -> None:
     
     logger.info(f"Create dataset with len = {len(dataset)}")
     dataset = dataset.reset_index(drop=True)
-    dataset.to_csv("data/earthquake.csv")
+    dataset.to_csv("data/earthquake_medium.csv")
 
 def main():
     create_dataset()

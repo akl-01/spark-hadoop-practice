@@ -1,6 +1,6 @@
 import pandas as pd
 from pyspark.sql import SparkSession
-import pyspark
+import numpy as np
 from catboost import CatBoostRegressor
 from sklearn.metrics import mean_absolute_error
 import gc
@@ -25,6 +25,7 @@ logger.addHandler(console)
 class SimpleSparkSession:
     def __init__(self) -> None:
         self.spark = SparkSession.builder.appName("My App 1").getOrCreate()
+        self.spark.sparkContext.setLogLevel("ERROR")
         self.model = CatBoostRegressor(
             iterations=4200,
             learning_rate=1,
@@ -36,11 +37,14 @@ class SimpleSparkSession:
         self.rams = []
 
     def get_dataset(self) -> Tuple[pd.DataFrame, int]:
-        self.raw_data = self.spark.read.csv("hdfs://namenode:9001/earthquake.csv", header=True)
+        logger.info(f"\tStart the read from hadoop")
+        self.raw_data = self.spark.read.csv("hdfs://namenode:9001/earthquake_small.csv", header=True) # Change on eqarthquake
+        logger.info(f"\tEnd the read from hadoop")
         self.dataset = self.raw_data.toPandas()
         return self.dataset, len(self.dataset)
     
     def reset(self):
+        logger.info("\tReset datasets")
         self.raw_data.unpersist()
         del self.raw_data, self.dataset
         gc.collect()
@@ -52,14 +56,15 @@ class SimpleSparkSession:
                 file.write(f"{i+1},{self.times[i]},{self.rams[i]}\n")
     
     def start(self):
-        for _ in tqdm(range(100)):
+        for exp in range(100):
+            logger.info(f"Experiment={exp}")
             dataset, length = self.get_dataset()
             start = time.time()
             start_memory_usage = get_memory_usage()
+            logger.info(f"\t{start_memory_usage=}")
             mean_mae = 0
             for idx in range(length):
                 dataset_el = dataset.iloc[[idx]]
-                #print(dataset_el)
                 dataset_el = preprocess(dataset_el)
                 if len(dataset_el) == 0:
                     continue
@@ -70,8 +75,9 @@ class SimpleSparkSession:
             mean_mae = mean_mae / length
             end = time.time()
             end_memory_usage = get_memory_usage()
+            logger.info(f"\t{end_memory_usage=}")
             self.times.append(end - start)
-            self.rams.append(end_memory_usage - start_memory_usage)
+            self.rams.append(np.abs(end_memory_usage - start_memory_usage))
             
             self.reset()
         self.spark.stop()

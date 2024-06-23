@@ -59,7 +59,9 @@ def fill_none(df: pd.DataFrame) -> pd.DataFrame:
     df = df.fillna(value=values)
     return df
 
-def preprocess(df: pd.DataFrame) -> pd.DataFrame:
+def preprocess(df: pd.DataFrame | pd.Series) -> pd.DataFrame:
+    if df is pd.Series:
+        df = df.to_frame().T
     df.index = np.array([0])
     df = df[IMPORTANT_FEATURES + TARGET]
     df = fill_none(df)
@@ -70,6 +72,4 @@ def preprocess(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def get_memory_usage():
-    process = psutil.Process(os.getpid())
-    mem = process.memory_info().rss
-    return mem
+    return psutil.virtual_memory().used
