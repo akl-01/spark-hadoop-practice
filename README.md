@@ -5,20 +5,21 @@
 ## Generate Dataset
 
 ## Run
-
 > Python3.10.12 is used
+
+Clone the repository:
+```bash
+git clone https://github.com/akl-01/spark-hadoop-practice.git
+cd spark-hadoop-practice/
+```
 
 ### Install requirements
 ```bash
 pip install -r requirements.txt
 ```
-### Up docker-compose
-1. Go to `configuration` directory:
-```bash
-cd config
-```
 
-2. Run docker-compose as demon:
+### Up docker-compose
+1. Run docker-compose as demon:
 ```bash
 docker-compose up --build -d
 ```
@@ -45,9 +46,7 @@ docker-compose down
 ``` 
 
 ### Put the dataset into HDFS
-1. Go to `spark-hadoop-lab` directory:
-
-2. Put the dataset into namenode:
+1. Put the dataset into namenode:
 ```bash
 docker cp data/earthquake.csv namenode:/
 ```
@@ -63,7 +62,7 @@ hdfs dfs -put earthquake.csv /
 ```
 
 ### Run
-To run application:
+1. Run the application:
 ```bash
 bash ./run.sh <type>
 ```
