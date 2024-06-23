@@ -1,5 +1,5 @@
 # Spark-Hadoop Practice
-The repository devote to work with `hadoop` store system and `spark` application to work with hdfs. The components are upped as docker containers with [docker-compose.yaml](./docker-compose.yml), [Dockerfile](./Dockerfile) and [hadoop](./hadoop.env) configurations. The aim is to compare result both of `time` and `ram` consuming depends on different hadoop configuration and spark application: `1 DataNode` and `3 DataNode` with `parallel` and `not parallel` spark application. 
+The repository devote to work with `hadoop` store system and `spark` application to work with hdfs. The components are upped as docker containers with [docker-compose.yaml](./docker-compose.yml), [Dockerfile](./Dockerfile) and [hadoop](./hadoop.env) configurations. The aim is to compare result both of `time` and `ram` consuming depends on different `hadoop` configuration and `spark` application: `1 DataNode` and `3 DataNode` with `parallel` and `not parallel` application. 
 ## Results
 
 ## Clonning
@@ -25,7 +25,12 @@ pip install -r requirements.txt
 ```
 
 ### Up docker-compose
-1. Run docker-compose as demon:
+1. Create file for metric output
+```bash
+bash src/mertic.sh
+```
+
+2. Run docker-compose as demon:
 ```bash
 docker-compose up --build -d
 ```

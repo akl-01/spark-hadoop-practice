@@ -8,7 +8,9 @@ if [ $1 == "simple" ]; then
     docker cp -L app/utils.py spark-master:/opt/bitnami/spark/utils.py
     docker-compose exec spark-master spark-submit --master spark://$spark_master_ip spark.py
 elif [ $1 == "optimal" ]; then
-    echo $1
+    docker cp -L app/spark_opt.py spark-master:/opt/bitnami/spark/spark_opt.py
+    docker cp -L app/utils.py spark-master:/opt/bitnami/spark/utils.py
+    docker-compose exec spark-master spark-submit --master spark://$spark_master_ip spark_opt.py
 else
     echo "incorrect type"
 fi
